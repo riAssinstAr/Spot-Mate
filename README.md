@@ -47,6 +47,7 @@ Before you start the server, you'll need to do the following:
 * After creating the app, click in the app and go to Settings. From here copy your Client ID and Client Secret.
 
 * Then you will need to make the following changes in your project:
+  
   In the below lines of code highlighted with purple, put the file path to geckodriver and ublock origin respectively
 ![Screenshot 2025-03-06 211945](https://github.com/user-attachments/assets/85dce87f-c250-484d-844b-cdfe4bdcfcbd)
   In the below lines of code highlightedm with purple, replace the '1000' with the number of songs in your liked playlist
