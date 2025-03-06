@@ -34,7 +34,7 @@ service = FirefoxService(executable_path="PATH_TO_GECKODRIVER")  # Path to Gecko
 driver = webdriver.Firefox(service=service, options=firefox_options)
 
 # Install uBlock Origin
-driver.install_addon("PATH_TO_UBLOCK_ORIGIN", temporary=True) # Path to uBlock Origin
+driver.install_addon("./uBlock0.firefox.signed.xpi", temporary=True) # Path to uBlock Origin
 
 # Open the website SpotMate
 driver.get('https://spotmate.online/en')
@@ -91,7 +91,7 @@ def save_liked_songs():
                     # This line only saves track URLs, to save other details please refer to Spotify Web API
                     response[j] = item["track"]["external_urls"]["spotify"]
                     j += 1
-                i += 1000
+                i += 50
 
     except Exception as e:
         print(f"There was an error: {str(e)}")
