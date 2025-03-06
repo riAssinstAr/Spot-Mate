@@ -60,3 +60,4 @@ Start the server
  - [Medium](https://medium.com/@luca.pasquarelli.villa/spotify-api-get-your-liked-songs-with-python-and-spotipy-175c2310f0c3)
  - [Katia Gilligan Tutorial](https://www.youtube.com/watch?v=mBycigbJQzA&t=1298s)
  - [Katia Gilligan Repo](https://github.com/katiagilligan888/Spotify-Discover-Weekly)
+ - [Spotmate](https://spotmate.online/en)
