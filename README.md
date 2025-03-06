@@ -28,16 +28,10 @@ Go to the project directory
   cd my-project
 ```
 
-Install Flask Spotipy
+Install Flask, Spotipy and Selenium
 
 ```bash
-  pip install flask spotipy
-```
-
-Install Selenium
-
-```bash
-  pip install selenium 
+  pip install flask spotipy selenium
 ```
 
 Before you start the server, you'll need to do the following:
