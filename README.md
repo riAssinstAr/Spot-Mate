@@ -69,7 +69,7 @@ Start the server
 
 ## FAQ
 
-  - [Spotmate](https://spotmate.online/en) is not hosted or managed by me. This script only allows users to automate the lengthy process of downloading potentially hundreds of songs.
+  - [Spotmate](https://spotmate.online/en) is not hosted or managed by me. This script only allows users to automate the lengthy process of downloading potentially hundreds of songs. The method of extracting and      downloading all songs belong to the owner of Spotmate.
   - Users are responsible for their actions and potential legal consequences. We do not support unauthorized downloading of copyrighted material and take no responsibility for user actions.
   - The list of all your liked songs URLs will be stored in JSON format in the project folder after the script finishes executing in the file named 'data.json'. Note that the songs in the JSON file will be based      in the value of the variable 'i' set the last time the script was run and the number of times the while loop was run.
   - In tne rare case any particular song is not found, the script will throw an error with the number of the last song downloaded by the script printed in the console. In order to continue downloading you'll need     to replace the below highlighted in purple number with the number of the last song downloaded by the script printed in the console plus 1.
