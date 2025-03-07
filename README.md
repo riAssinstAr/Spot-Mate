@@ -28,16 +28,10 @@ Go to the project directory
   cd my-project
 ```
 
-Install Flask Spotipy
+Install Flask, Spotipy and Selenium
 
 ```bash
-  pip install flask spotipy
-```
-
-Install Selenium
-
-```bash
-  pip install selenium 
+  pip install flask spotipy selenium
 ```
 
 Before you start the server, you'll need to do the following:
@@ -46,9 +40,40 @@ Before you start the server, you'll need to do the following:
 
 * After creating the app, click in the app and go to Settings. From here copy your Client ID and Client Secret.
 
+* Then you will need to make the following changes in your project:
+  
+  In the below lines of code highlighted with purple, put the file path to geckodriver and ublock origin respectively.
+  
+![Screenshot 2025-03-06 211945](https://github.com/user-attachments/assets/85dce87f-c250-484d-844b-cdfe4bdcfcbd)
+
+  In the below lines of code highlightedm with purple, replace the '1000' with the number of songs in your liked playlist.
+  
+![Screenshot 2025-03-06 212026](https://github.com/user-attachments/assets/f3ba3619-2524-4d5b-8ef1-7303d362f0dc)
+
+  In the below lines of code highlightedm with purple, put the Client Id and Client secret that you got from Spotify Developers app.
+  
+![Screenshot 2025-03-06 212117](https://github.com/user-attachments/assets/b43fe825-477e-4d81-8486-258efc41cba7)
+
 Start the server
 
 ```bash
   python Spotdown.py
 ```
 
+## Acknowledgements
+
+ - [Medium](https://medium.com/@luca.pasquarelli.villa/spotify-api-get-your-liked-songs-with-python-and-spotipy-175c2310f0c3)
+ - [Katia Gilligan Tutorial](https://www.youtube.com/watch?v=mBycigbJQzA&t=1298s)
+ - [Katia Gilligan Repo](https://github.com/katiagilligan888/Spotify-Discover-Weekly)
+ - [Spotmate](https://spotmate.online/en)
+
+## FAQ
+
+  - [Spotmate](https://spotmate.online/en) is not hosted or managed by me. This script only allows users to automate the lengthy process of downloading potentially hundreds of songs. The method of extracting and      downloading all songs belong to the owner of Spotmate.
+  - Users are responsible for their actions and potential legal consequences. We do not support unauthorized downloading of copyrighted material and take no responsibility for user actions.
+  - The list of all your liked songs URLs will be stored in JSON format in the project folder after the script finishes executing in the file named 'data.json'. Note that the songs in the JSON file will be based      in the value of the variable 'i' set the last time the script was run and the number of times the while loop was run.
+  - In tne rare case any particular song is not found, the script will throw an error with the number of the last song downloaded by the script printed in the console. In order to continue downloading you'll need     to replace the below highlighted in purple number with the number of the last song downloaded by the script printed in the console plus 1.
+
+    ![Screenshot 2025-03-07 180715](https://github.com/user-attachments/assets/3f441860-ba1a-42e0-b789-eafedd371540)
+
+    Please note that this method for bypassing the error is not tested by anyone at the moment. If there are any other queries or errors that you may not be able to figure out the solution for by youself, please      feel free to contact me.
