@@ -104,7 +104,8 @@ def save_liked_songs():
     v = ""
     try:
         # Send data to the search box, press Enter to submit the search, then Download
-        for value in response.values():
+        for key,value in response.items():
+            print(f"Working on song index: {key}")
             v = value
             search_box = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.ID, "trackUrl"))
