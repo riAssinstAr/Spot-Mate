@@ -21,7 +21,7 @@ Open the terminal by pressing 'Win+X' then 'I'.
 Clone the project
 
 ```bash
-  git clone https://github.com/riAs-g/Spot-Down my-project
+  git clone https://github.com/riAs-g/Spot-Down.git my-project
 ```
 
 Go to the project directory
