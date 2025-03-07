@@ -101,10 +101,11 @@ def save_liked_songs():
     with open('data.json', 'w') as fp:
         json.dump(response, fp)
 
-
+    v = ""
     try:
         # Send data to the search box, press Enter to submit the search, then Download
         for value in response.values():
+            v = value
             search_box = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.ID, "trackUrl"))
             )
@@ -137,6 +138,8 @@ def save_liked_songs():
 
     except Exception as e:
         print(f"There was an error: {str(e)}")
+        k = [key for key, val in response.items() if val == v]
+        print(f"The index of the song the threw error: {k}")
         return 'There was am error. Check console.'
 
     # return a success message
