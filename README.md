@@ -75,3 +75,5 @@ Start the server
   - In tne rare case any particular song is not found, the script will throw an error with the number of the last song downloaded by the script printed in the console. In order to continue downloading you'll need     to replace the below highlighted in purple number with the number of the last song downloaded by the script printed in the console plus 1.
 
     ![Screenshot 2025-03-07 180715](https://github.com/user-attachments/assets/3f441860-ba1a-42e0-b789-eafedd371540)
+
+    Please note that this method for bypassing the error is not tested by anyone at the moment. If there are any other queries or errors that you may not be able to figure out the solution for by youself, please      feel free to contact me.
