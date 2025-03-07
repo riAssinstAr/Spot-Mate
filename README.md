@@ -8,18 +8,20 @@ This python script helps the user export the URLs of and download all songs from
 
 ## Run Locally
 
-Download and install Firefox browser from [here](https://www.mozilla.org/en-US/firefox/new/)
+Download and install Firefox browser from [here](https://www.mozilla.org/en-US/firefox/new/).
 
 Download and add PATH to Geckodriver, Downlaod Link [here](https://github.com/mozilla/geckodriver/releases), Youtube tutorial to add PATH for Webdrivers [here](https://www.youtube.com/watch?v=dz59GsdvUF8). Place the Geckodriver inside the 'webdrivers' folder which you have added to PATH.
 
-Download and install Python following the instructions from [here](https://www.python.org/downloads/)
+Download and install Python following the instructions from [here](https://www.python.org/downloads/).
 
-Installing Python should automatically install 'pip' but in case it does not, you can install it manually following the instructions from [here](https://pip.pypa.io/en/stable/installation/)
+Installing Python should automatically install 'pip' but in case it does not, you can install it manually following the instructions from [here](https://pip.pypa.io/en/stable/installation/).
+
+Open the terminal by pressing 'Win+X' then 'I'.
 
 Clone the project
 
 ```bash
-  git clone https://github.com/riAs-g/Spot-Down
+  git clone https://github.com/riAs-g/Spot-Down my-project
 ```
 
 Go to the project directory
@@ -59,6 +61,9 @@ Start the server
 ```bash
   python Spotdown.py
 ```
+
+After starting the server, click on the local address given in the console. It will take you to the login page in your browser. After you login the script will start downloading your songs.
+NOTE: Do not close the browser window or stop the server or else the download will stop too. After the script is done downloading, it will show completed message in the browser window or an error message if there was an error. You can stop the server by typing CTRL+C in the terminal.
 
 ## Acknowledgements
 
