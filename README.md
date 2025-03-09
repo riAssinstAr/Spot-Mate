@@ -9,6 +9,8 @@ We know that there are other options out on the internet to download playlists. 
 
 This comes as the default with the script and is recommended, however, if users would still like to run the Webdriver automation provided in the script to download their songs, all they need to do is comment out the lines of code from line 105 to 127 from the source code and then run the script. (Select the lines from 105 to 127 then press CTRL+/ to comment lines).
 
+CAUTION: If you run the script multiple times it will add duplicates of all the songs in the 'Save' playlist, please be careful.
+
 
 ## Run Locally
 
