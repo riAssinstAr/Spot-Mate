@@ -1,7 +1,7 @@
 
 # Spotify Download Automation
 
-This python script helps the user export the URLs of and download all songs from their Liked Songs playlist from the website [Spotmate](https://spotmate.online/en) using Selenium automation with Firefox's Geckodriver. In this script we have also used uBlock Origin extension addon since popups and ads can hinder with the automation process.
+This python script helps the users to export all songs from Liked Songs playlist into a different playlist and/or download all songs from their Liked Songs playlist from the website [Spotmate](https://spotmate.online/en) using Selenium automation with Firefox's Geckodriver. In this script we have also used uBlock Origin extension addon since popups and ads can hinder with the automation process.
 
 ## Alternative (Please Read This First)
 
