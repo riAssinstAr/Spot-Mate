@@ -34,7 +34,7 @@ service = FirefoxService(executable_path="PATH_TO_GECKODRIVER")  # Path to Gecko
 driver = webdriver.Firefox(service=service, options=firefox_options)
 
 # Install uBlock Origin
-driver.install_addon("./uBlock0.firefox.signed.xpi", temporary=True) # Path to uBlock Origin
+driver.install_addon("PATH_TO_UBLOCK", temporary=True) # Path to uBlock Origin
 
 # Open the website SpotMate
 driver.get('https://spotmate.online/en')
@@ -53,10 +53,8 @@ def login():
 def redirect_page():
     # clear the session
     session.clear()
-    # get the authorization code from the request parameters
-    code = request.args.get('code')
     # exchange the authorization code for an access token and refresh token
-    token_info = create_spotify_oauth().get_access_token(code)
+    token_info = create_spotify_oauth().get_cached_token()
     # save the token info in the session
     session[TOKEN_INFO] = token_info
     # redirect the user to the save_discover_weekly route
@@ -69,16 +67,16 @@ def save_liked_songs():
     try:
         # get the token info from the session
         token_info = get_token()
-    except:
+    except Exception as e:
         # if the token info is not found, redirect the user to the login route
-        print('User not logged in')
+        print(f"There was an error: User not logged in {str(e)}")
         return redirect("/")
 
     # create a Spotipy instance with the access token
     sp = spotipy.Spotify(auth=token_info['access_token'])
 
     # get the songs
-    response = {}
+    response = []
     i = 0
     try:
         if sp:
@@ -89,62 +87,90 @@ def save_liked_songs():
                 results = sp.current_user_saved_tracks(offset=i, limit=50)
                 for item in results["items"]:
                     # This line only saves track URLs, to save other details please refer to Spotify Web API
-                    response[j] = item["track"]["external_urls"]["spotify"]
+                    response.append(item["track"]["external_urls"]["spotify"])
                     j += 1
                 i += 50
 
     except Exception as e:
         print(f"There was an error: {str(e)}")
-        return 'There was am error. Check console.'
+        return 'There was am error. Please check the console.'
 
     # dump to json
     with open('data.json', 'w') as fp:
         json.dump(response, fp)
 
-    v = ""
+
+    ##_____BELOW CODE ADDS ALL SONGS FROM LIKED TO 'SAVE' PLAYLIST_____##
+    # get the user's playlists
+    current_playlists = sp.current_user_playlists()['items']
+    saved_playlist_id = None
+
+    # find the Save playlists
+    for playlist in current_playlists:
+        if playlist['name'] == 'Save':
+            saved_playlist_id = playlist['id']
+
+    # if the Save playlist is not found, return an error message
+    if not saved_playlist_id:
+        return 'Save playlist not found. Please make a new playlist named: Save, in your account'
+
+    # add the tracks to the Save playlist
+    i =0
+    while i < len(response):
+        sp.playlist_add_items(saved_playlist_id, response[i:i+100])
+        i += 100
+
+    print(f"Your Save playlist id is: {saved_playlist_id} \n"
+          "You can download all songs using Spotify DL from here: https://github.com/WilliamSchack/Spotify-Downloader/releases \n"
+          "'Please read the docs related to Spotify DL here: https://github.com/WilliamSchack/Spotify-Downloader")
+
+    return 'All songs added to Save playlist. Please check the console.'
+    ##__________##
+
+
+    ##_____BELOW CODE DOWNLOADS SONGS IN LIKED PLAYLIST_____##
     try:
         # Send data to the search box, press Enter to submit the search, then Download
-        for key,value in response.items():
-            print(f"Working on song index: {key}")
-            v = value
-            search_box = WebDriverWait(driver, 10).until(
+        for value in response:
+            print(f"Working on song index: {response.index(value)}")
+            search_box = WebDriverWait(driver, 5).until(
                 EC.presence_of_element_located((By.ID, "trackUrl"))
             )
             search_box.click()
             search_box.send_keys(value)
             search_box.send_keys(Keys.RETURN)
             #
-            button1 = WebDriverWait(driver, 10).until(
+            button1 = WebDriverWait(driver, 5).until(
                 EC.presence_of_element_located((By.CLASS_NAME, "btn-success"))
             )
             time.sleep(5)
             driver.execute_script("arguments[0].scrollIntoView();", button1)  # Scroll to button
             time.sleep(5)
-            WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "btn-success"))).click()
+            WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.CLASS_NAME, "btn-success"))).click()
             time.sleep(5)
             #
-            WebDriverWait(driver, 10).until(
+            WebDriverWait(driver, 5).until(
                 EC.presence_of_element_located((By.XPATH, "//a[text()='Download']"))
             )
             time.sleep(5)
-            WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//a[text()='Download']"))).click()
+            WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, "//a[text()='Download']"))).click()
             time.sleep(5)
             #
-            WebDriverWait(driver, 10).until(
+            WebDriverWait(driver, 5).until(
                 EC.presence_of_element_located((By.XPATH, "//a[text()='Download Another Song']"))
             )
             time.sleep(5)
-            WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//a[text()='Download Another Song']"))).click()
+            WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, "//a[text()='Download Another Song']"))).click()
             time.sleep(5)
 
     except Exception as e:
         print(f"There was an error: {str(e)}")
-        k = [key for key, val in response.items() if val == v]
-        print(f"The index of the song the threw error: {k}")
+        print(f"The index of the song the threw error: {response.index(value)}")
         return 'There was am error. Check console.'
 
     # return a success message
     return 'Liked Songs downloaded successfully.'
+    ##__________##
 
 
 # function to get the token info from the session
@@ -170,7 +196,7 @@ def create_spotify_oauth():
         client_id='YOUR_CLIENT_ID',
         client_secret='YOUR_CLIENT_SECRET',
         redirect_uri=url_for('redirect_page', _external=True),
-        scope='user-library-read'
+        scope='user-library-read playlist-modify-public playlist-modify-private'
     )
 
 
