@@ -3,7 +3,11 @@
 
 This python script helps the user export the URLs of and download all songs from their Liked Songs playlist from the website [Spotmate](https://spotmate.online/en) using Selenium automation with Firefox's Geckodriver. In this script we have also used uBlock Origin extension addon since popups and ads can hinder with the automation process.
 
+## Alternative (Please Read This First)
 
+We know that there are other options out on the internet to download playlists. However, the main reason for creating this script is to be able to download songs from the Liked Songs since it does not come with a sharing link related to it. We have modified the script to add all the songs in users Liked playlist to a new playlist with the name 'Save'. After that the users can use the sharing link of this new playlist to download songs from third-party applications like [Spotify Downloader](https://github.com/WilliamSchack/Spotify-Downloader/releases). Users first need to create a new playlist in their account with the name 'Save'. 
+
+This comes as the default with the script and is recommended, however, if users would still like to run the Webdriver automation provided in the script to download their songs, all they need to do is comment out the lines of code from line 105 to 127 from the source code and then run the script. (Select the lines from 105 to 127 then press CTRL+/ to comment lines).
 
 
 ## Run Locally
@@ -63,7 +67,7 @@ Start the server
 ```
 
 After starting the server, click on the local address given in the console. It will take you to the login page in your browser. After you login the script will start downloading your songs.
-NOTE: Do not close the browser window or stop the server or else the download will stop too. After the script is done downloading, it will show completed message in the browser window or an error message if there was an error. You can stop the server by typing CTRL+C in the terminal.
+NOTE: Do not close the browser window or stop the server or else the download will stop too. After the script is done downloading, it will show completed message in the browser window or an error message if there was an error. You can stop the server by pressing CTRL+C in the terminal twice.
 
 ## Acknowledgements
 
@@ -71,13 +75,14 @@ NOTE: Do not close the browser window or stop the server or else the download wi
  - [Katia Gilligan Tutorial](https://www.youtube.com/watch?v=mBycigbJQzA&t=1298s)
  - [Katia Gilligan Repo](https://github.com/katiagilligan888/Spotify-Discover-Weekly)
  - [Spotmate](https://spotmate.online/en)
+ - [Spotify Downloader](https://github.com/WilliamSchack/Spotify-Downloader/releases)
 
 ## FAQ
 
-  - [Spotmate](https://spotmate.online/en) is not hosted or managed by me. This script only allows users to automate the lengthy process of downloading potentially hundreds of songs. The method of extracting and      downloading all songs belong to the owner of Spotmate.
+  - [Spotmate](https://spotmate.online/en) and [Spotify Downloader](https://github.com/WilliamSchack/Spotify-Downloader/releases) are not hosted or managed by us. This script only allows users to automate the         lengthy process of downloading potentially hundreds of songs. The method of extracting and downloading all songs belong to the owner of Spotmate and Spotify Downloader.
   - Users are responsible for their actions and potential legal consequences. We do not support unauthorized downloading of copyrighted material and take no responsibility for user actions.
   - The list of all your liked songs URLs will be stored in JSON format in the project folder after the script finishes executing in the file named 'data.json'. Note that the songs in the JSON file will be based      in the value of the variable 'i' set the last time the script was run and the number of times the while loop was run.
-  - In tne rare case any particular song is not found, the script will throw an error with the number of the last song downloaded by the script printed in the console. In order to continue downloading you'll need     to replace the below highlighted in purple number with the number of the last song downloaded by the script printed in the console plus 1.
+  - In tne rare case any particular song is not found, the script will throw an error if you're using webdrivers for downloading with the number of the last song downloaded by the script printed in the console.       In order to continue downloading you'll need to replace the below highlighted in purple number with the number of the last song downloaded by the script printed in the console plus 1.
 
     ![Screenshot 2025-03-07 180715](https://github.com/user-attachments/assets/3f441860-ba1a-42e0-b789-eafedd371540)
 
