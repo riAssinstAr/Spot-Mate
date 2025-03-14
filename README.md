@@ -50,7 +50,7 @@ Before you start the server, you'll need to do the following:
 
 * Then you will need to make the following changes in your project:
   
-  In the below lines of code highlighted with purple, put the file path to geckodriver and ublock origin respectively.
+  In the below lines of code highlighted with purple, put the file path to geckodriver and ublock origin respectively. To copy path to any file, right click on the file and then click on copy path. Please note      that python uses double '/' instead of single '/' so users must modify accordingly after pasting the path in place.
   
 ![Screenshot 2025-03-06 211945](https://github.com/user-attachments/assets/85dce87f-c250-484d-844b-cdfe4bdcfcbd)
 
