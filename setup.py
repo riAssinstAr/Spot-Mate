@@ -6,8 +6,6 @@ setup(
     packages=find_packages(),
     install_requires=[
         'spotipy>=2.23.0',
-        'pytest>=6.2.5',
-        'setuptools>=57.0.0',
     ],
     entry_points={
         'console_scripts': [

@@ -82,8 +82,8 @@ def transfer_liked_songs_to_playlist(playlist_name='Save', client_id=None, clien
 
     print(f"Successfully added {len(new_tracks_to_add)} new songs to playlist '{playlist_name}'.")
 
-if __name__ == "__main__":
-    print("** Welcome to the Spotify CLI tool - Please go through the Readme before using **")
+def main():
+    print("** Welcome to the Spotify CLI tool **")
 
     parser = argparse.ArgumentParser(description="Spotify CLI Tool - Transfer Liked Songs to Playlist")
     parser.add_argument('--transfer', action='store_true', help="Transfer liked Spotify songs to a playlist")
@@ -97,12 +97,12 @@ if __name__ == "__main__":
     if args.playlist is None:
         args.playlist = str(input("Enter the destination playlist name (default: 'Transfer'): ") or 'Transfer')
     if args.Client_ID is None:
-        args.Client_ID = str(input("Enter the your Client ID: "))
+        args.Client_ID = str(input("Enter your Client ID: "))
         if not args.Client_ID:
             print("Client ID is required. Exiting.")
             exit(1)
     if args.Client_Secret is None:
-        args.Client_Secret = str(input("Enter the your Client Secret: "))
+        args.Client_Secret = str(input("Enter your Client Secret: "))
         if not args.Client_Secret:
             print("Client Secret is required. Exiting.")
             exit(1)
@@ -111,3 +111,6 @@ if __name__ == "__main__":
         transfer_liked_songs_to_playlist(args.playlist, args.Client_ID, args.Client_Secret)
     else:
         print("No valid argument provided. Use --help to see available options.")
+
+if __name__ == "__main__":
+    main()

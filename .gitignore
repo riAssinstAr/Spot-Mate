@@ -5,3 +5,4 @@ build/
 .env
 .venv
 .vscode/
+.cache

@@ -17,7 +17,7 @@ pip install spotmate
 - After creating the app, click in the app and go to Settings. From here copy your Client ID and Client Secret. These will be needed for authentication.
 
 ```bash
-spotmate --transfer --playlist "<playlist_name>"
+spotmate --transfer
 ```
 
 ## Run Project Locally
