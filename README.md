@@ -2,9 +2,9 @@
   <img src="logo.png" alt="Spotify CLI Tool Logo" width="200"/>
 </p>
 <h1 align="center">Spotify Manager CLI</h1>
-<h6 align="center">
-  This Python script helps users to manage their Spotify playlist. Currently only supports the feature to export all the songs from their Liked Songs playlist into another playlist.
-</h6>
+<p align="center">
+  A simple CLI tool that helps users to manage their Spotify playlist. Currently only supports the feature to export all the songs from their Liked Songs playlist into another playlist.
+</p>
 <br>
 
 ## IMPORTANT - Before you use the package, you'll need to do the following:
