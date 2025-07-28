@@ -1,22 +1,26 @@
-# Spotify CLI Tool
+<p align="center">
+  <img src="logo.png" alt="Spotify CLI Tool Logo" width="200"/>
+</p>
+<h1 align="center">Spotify Manager CLI</h1>
+<h6 align="center">
+  This Python script helps users to manage their Spotify playlist. Currently only supports the feature to export all the songs from their Liked Songs playlist into another playlist.
+</h6>
+<br>
 
-This python script helps the user export all the songs from their Liked Songs playlist into another playlist using Spotify's Web API.
+## IMPORTANT - Before you use the package, you'll need to do the following:
 
-NOTE: You need to have Python and pip installed in your system.
+- Login to Spotify Developers [Website](https://developer.spotify.com/) with your spotify account. Go to user dashboard and create an new app.
+- Fill in the required details, Redirect URIs as: http://127.0.0.1:8888/callback. Then check the Web API checkbox and save.
+- After creating the app, click in the app and go to Settings. From here copy your Client ID and Client Secret. These will be needed for authentication.
+- Install python and pip in your system.
 
-## Installation
+### Installation
 
 ```bash
 pip install spotmate
 ```
 
-## IMPORTANT - Before you use the package, you'll need to do the following:
-
-- Login to Spotify Developers [Website](https://developer.spotify.com/) with your spotify account. Go to user dashboard and create an new app. Fill in the required details, Redirect URIs as: http://127.0.0.1:8888/callback , and check the Web API checkbox and save.
-
-- After creating the app, click in the app and go to Settings. From here copy your Client ID and Client Secret. These will be needed for authentication.
-
-## Run Spotmate
+### Usage
 
 ```bash
 spotmate --transfer
@@ -58,4 +62,4 @@ Build the project
 
 - If the package doesn't work as intended or if you'd like to request a new feature to be added, please feel to contact me.
 
-- The main reason for creating this script is to be able to download songs from the Liked Songs since it does not come with a sharing link related to it. The package adds all the songs in users Liked playlist to a new playlist with the name 'Transfer' being the default name. After that the users can use the sharing link of this new playlist to download songs from third-party applications like [Spotify Downloader](https://github.com/WilliamSchack/Spotify-Downloader/releases).
+- This script was made to allow users to share the Liked Songs playlist since it does not come with a sharing link related to it. The package adds all the songs in users Liked playlist to a new playlist.
