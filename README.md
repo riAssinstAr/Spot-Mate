@@ -1,13 +1,13 @@
 <p align="center">
   <img src="logo.png" alt="Spotify CLI Tool Logo" width="200"/>
 </p>
-<h1 align="center">Spotify Manager CLI</h1>
+<h1 align="center">Spotify Manager</h1>
 <p align="center">
-  A simple CLI tool that helps users to manage their Spotify playlist. Currently only supports the feature to export all the songs from their Liked Songs playlist into another playlist.
+  A command line tool that helps users manage their Spotify playlists.
 </p>
 <br>
 
-## IMPORTANT - Before you use the package, you'll need to do the following:
+# IMPORTANT - Before you use the package, you'll need to do the following:
 
 - Login to Spotify Developers [Website](https://developer.spotify.com/) with your spotify account. Go to user dashboard and create an new app.
 - Fill in the required details, Redirect URIs as: http://127.0.0.1:8888/callback. Then check the Web API checkbox and save.
@@ -26,7 +26,7 @@ pip install spotmate
 spotmate --transfer
 ```
 
-## Run Project Locally
+# Run Project Locally
 
 Clone the project
 
@@ -52,14 +52,8 @@ Build the project
   python -m build
 ```
 
-## Acknowledgements
-
-- [Medium](https://medium.com/@luca.pasquarelli.villa/spotify-api-get-your-liked-songs-with-python-and-spotipy-175c2310f0c3)
-- [Katia Gilligan Tutorial](https://www.youtube.com/watch?v=mBycigbJQzA&t=1298s)
-- [Katia Gilligan Repo](https://github.com/katiagilligan888/Spotify-Discover-Weekly)
-
 ## FAQ
 
-- If the package doesn't work as intended or if you'd like to request a new feature to be added, please feel to contact me.
+- If the package doesn't work as intended or if you'd like to request a new feature to be added, please feel to contact me or create a PR.
 
 - This script was made to allow users to share the Liked Songs playlist since it does not come with a sharing link related to it. The package adds all the songs in users Liked playlist to a new playlist.
