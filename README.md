@@ -23,7 +23,7 @@ pip install spotmate
 ### Usage
 
 ```bash
-spotmate --transfer
+spotmate
 ```
 
 # Run Project Locally
