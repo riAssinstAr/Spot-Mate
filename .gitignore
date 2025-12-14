@@ -6,3 +6,4 @@ build/
 .venv
 .vscode/
 .cache
+.spotmate_cache

@@ -1,113 +1,92 @@
+from prompt_toolkit import prompt
+from spotmate.manager import (
+    copy_all,
+    copy_range,
+    export_playlist,
+    remove_range,
+    remove_playlist,
+)
+from spotmate.ui import (
+    select_from_list,
+)
 from spotmate.spotify_auth import create_spotify_client
-from spotmate.actions import confirm_action, choose_from_list
 from spotmate.playlist_utils import (
-    list_playlists, get_playlist_tracks,
-    copy_songs, delete_playlist, delete_songs_range
+    list_playlists,
+    get_playlist_tracks,
+)
+from spotmate.actions import (
+    check_for_update,
+    get_playlist_type,
+    get_actions_for_type,
 )
 
-def get_playlist_type(playlist, user_id):
-    if playlist['name'] == "Liked Songs":
-        return "liked"
-    elif playlist.get('owner', {}).get('id') == user_id:
-        return "private"
-    else:
-        return "public"
 
+def manage_playlist(sp_user, user_id, source_playlist):
+    print("\nFetching playlist tracks...")
+    source_tracks = get_playlist_tracks(sp_user, source_playlist)
+    playlist_type = get_playlist_type(source_playlist, user_id)
 
-def get_actions_for_type(playlist_type):
-    if playlist_type == "liked":
-        return [
-            "Copy all songs to another playlist",
-            "Copy a range of songs to another playlist",
-            "Delete a range of songs from this playlist",
-            "Go back to playlists"
-        ]
-    elif playlist_type == "private":
-        return [
-            "Copy all songs to another playlist",
-            "Copy a range of songs to another playlist",
-            "Delete this playlist",
-            "Delete a range of songs from this playlist",
-            "Go back to playlists"
-        ]
-    elif playlist_type == "public":
-        return [
-            "Copy all songs to another playlist",
-            "Copy a range of songs to another playlist",
-            "Unfollow this playlist",
-            "Go back to playlists"
-        ]
+    while True:
+        all_playlists = list_playlists(sp_user)
+        writable_playlists = [p for p in all_playlists if p.get("owner", {}).get("id") == user_id]
+        writable_names = [p["name"] for p in writable_playlists] + ["Create new playlist", "Cancel"]
 
-
-def manage_playlist(sp, playlist, user_id):
-    name = playlist["name"]
-    ptype = get_playlist_type(playlist, user_id)
-    actions = get_actions_for_type(ptype)
-
-    print(f"\nManaging: {name}  |  Type: {ptype.upper()}")
-    action = choose_from_list(actions)
-
-    if "Go back to playlists" in action:
-        return
-    # ---- COPY ALL SONGS ----
-    elif "Copy all" in action:
-        dest = input("Enter destination playlist name: ")
-        if confirm_action(f"Copy ALL songs from '{name}' to '{dest}'?"):
-            tracks = get_playlist_tracks(sp, playlist)
-            copy_songs(sp, tracks, dest)
-    # ---- COPY RANGE ----
-    elif "Copy a range" in action:
-        start = int(input("Start index: "))
-        end = int(input("End index: "))
-        dest = input("Enter destination playlist name: ")
-        if confirm_action(f"Copy songs {start}-{end} from '{name}' to '{dest}'?"):
-            tracks = get_playlist_tracks(sp, playlist)
-            copy_songs(sp, tracks, dest, start, end)
-    # ---- DELETE PLAYLIST ----
-    elif "Delete this playlist" or "Unfollow this playlist" in action:
-        if confirm_action(f"Delete playlist '{name}' from your library?"):
-            delete_playlist(sp, name)
-    # ---- DELETE SONG RANGE ----
-    elif "Delete a range of songs" in action and ptype in ["private", "liked"]:
-        start = int(input("Start index: "))
-        end = int(input("End index: "))
-        if confirm_action(f"Delete songs {start}-{end} from '{name}'?"):
-            delete_songs_range(sp, playlist, start, end)
-
-    print("Action complete. Returning to playlist menu...")
+        action_choice = select_from_list(
+            title=f"\nSelected playlist: {source_playlist['name']} ({playlist_type.upper()})",
+            text="Choose an action:",
+            options=get_actions_for_type(playlist_type),
+        )
+        if action_choice in (None, "Back"):
+            return
+        # COPY ALL
+        elif action_choice == "Copy all songs":
+            copy_all(writable_names, sp_user, user_id, source_tracks)
+        # COPY RANGE
+        elif action_choice == "Copy a range of songs":
+            copy_range(writable_names, sp_user, user_id, source_tracks)
+        # EXPORT
+        elif action_choice == "Export to JSON/CSV":
+            export_playlist(source_playlist, source_tracks, output_dir=".")
+        # DELETE / UNFOLLOW
+        elif action_choice in ("Delete playlist", "Unfollow playlist"):
+            if remove_playlist(sp_user, source_playlist):
+                return
+        # DELETE RANGE
+        elif action_choice == "Delete a range of songs":
+            remove_range(sp_user, source_playlist, source_tracks)
 
 
 def main():
-    print("🎵 ** Welcome to SpotMate - Your Spotify CLI Companion ** 🎵\n")
+    print("SpotMate — Spotify Playlist Manager\n")
+    print("Documentation & Source Code: https://github.com/riAssinstAr/Spot-Mate\n")
+    check_for_update()
 
-    client_id = input("Enter your Spotify Client ID: ").strip()
-    client_secret = input("Enter your Spotify Client Secret: ").strip()
-
+    client_id = prompt("Enter your Spotify Client ID: ").strip()
+    client_secret = prompt("Enter your Spotify Client Secret: ").strip()
     if not client_id or not client_secret:
-        print("Client ID and Secret are required. Exiting.")
+        print("Client ID and Secret are required!")
         return
 
-    sp = create_spotify_client(client_id, client_secret)
-    user = sp.current_user()
-    user_id = user['id']
+    print("Authenticating with Spotify...")
+    sp_user = create_spotify_client(client_id, client_secret)
+    user_id = sp_user.current_user()["id"]
 
     while True:
-        print("\nFetching your playlists...")
-        playlists = list_playlists(sp)
-        playlist_names = [p['name'] for p in playlists] + ["Exit"]
+        print("Fetching your playlists...")
+        all_playlists = list_playlists(sp_user)
+        playlist_names = [p["name"] for p in all_playlists] + ["Exit"]
 
-        name_choice = choose_from_list(playlist_names)
-        if name_choice == "Exit":
-            print("Goodbye!")
+        choice = select_from_list(
+            title="\nYour playlists",
+            text="Choose a playlist to manage:",
+            options=playlist_names,
+        )
+        if choice in (None, "Exit"):
+            print("\nGoodbye!")
             break
 
-        playlist_choice = next((p for p in playlists if p['name'] == name_choice), None)
-        if not playlist_choice:
-            print("Invalid selection.")
-            continue
-
-        manage_playlist(sp, playlist_choice, user_id)
+        playlist_choice = next(p for p in all_playlists if p["name"] == choice)
+        manage_playlist(sp_user, user_id, playlist_choice)
 
 
-if __name__ == "__main__":
-    main()
+if __name__ == "__main__": main()

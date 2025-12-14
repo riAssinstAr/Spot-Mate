@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "spotmate"
+version = "2.0.0"
+description = "A CLI tool to manage your Spotify playlists"
+readme = "README.md"
+authors = [
+  { name = "Ankit Kumar Ravi" }
+]
+requires-python = ">=3.9"
+dependencies = [
+  "spotipy>=2.23.0",
+  "prompt-toolkit>=3.0"
+]
+
+[project.urls]
+Homepage = "https://github.com/riAssinstAr/Spot-Mate"
+Repository = "https://github.com/riAssinstAr/Spot-Mate"
+
+[project.scripts]
+spotmate = "spotmate.main:main"
