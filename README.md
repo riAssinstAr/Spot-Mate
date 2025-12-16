@@ -3,7 +3,7 @@
 </p>
 <h1 align="center">Spotify Manager</h1>
 <p align="center">
-  A command line tool that helps users manage their Spotify playlists.
+  A command-line utility tool for Spotify playlists and albums.
 </p>
 <br>
 
@@ -14,6 +14,14 @@
 - After creating the app, click in the app and go to Settings. From here copy your Client ID and Client Secret. These will be needed for authentication.
 - Install python and pip in your system.
 
+### Features
+
+- Copy all/range songs from one playlist to another
+- Remove/Delete a playlist from your library
+- Remove all/range of songs from your Liked/Private playlists
+- Export all/range songs from a playlist to JSON/CSV
+- Import all songs from JSON/CSV to a playlist
+
 ### Installation
 
 ```bash
@@ -23,7 +31,7 @@ pip install spotmate
 ### Usage
 
 ```bash
-spotmate --transfer
+spotmate
 ```
 
 # Run Project Locally
@@ -43,7 +51,7 @@ Go to the project directory
 Install dependencies
 
 ```bash
-  pip install setuptools spotipy pytest build twine
+  pip install -r requirements.txt
 ```
 
 Build the project
@@ -54,6 +62,6 @@ Build the project
 
 ## FAQ
 
-- If the package doesn't work as intended or if you'd like to request a new feature to be added, please feel to contact me or create a PR.
+- If the package doesn't work as intended or if you'd like to request a new feature to be added, please feel to contact me or create a issue.
 
-- This script was made to allow users to share the Liked Songs playlist since it does not come with a sharing link related to it. The package adds all the songs in users Liked playlist to a new playlist.
+- It is a prerequisite for all users to create the Spotify app with the Spotify account the user wish to manage. Without the Client ID and Secret the app will not work.

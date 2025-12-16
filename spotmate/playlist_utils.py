@@ -3,6 +3,20 @@ import json
 from prompt_toolkit import prompt
 
 
+def list_albums(sp_user):
+    albums = []
+    offset = 0
+
+    while True:
+        results = sp_user.current_user_saved_albums(limit=50, offset=offset)
+        albums.extend(results["items"])
+        if not results["next"]:
+            break
+        offset += 50
+
+    return [a["album"] for a in albums]
+
+
 def list_playlists(sp_user):
     playlists = []
     offset = 0
@@ -18,58 +32,98 @@ def list_playlists(sp_user):
     return [liked] + playlists
 
 
-def get_playlist_tracks(sp_user, playlist):
+def get_source_tracks(sp_user, source, source_type):
     tracks = []
     offset = 0
 
-    if playlist["name"] == "Liked Songs":
+    # Liked Songs
+    if source_type == "playlist" and source["name"] == "Liked Songs":
         while True:
             results = sp_user.current_user_saved_tracks(limit=50, offset=offset)
-            if not results["items"]:
+            items = results["items"]
+            if not items:
                 break
 
-            tracks.extend(t["track"] for t in results["items"] if t["track"])
+            tracks.extend(item["track"] for item in items if item.get("track"))
             offset += 50
-    else:
+    # Regular Playlist
+    elif source_type == "playlist":
         while True:
-            results = sp_user.playlist_items(playlist["id"], limit=100, offset=offset)
-            if not results["items"]:
+            results = sp_user.playlist_items(
+                source["id"],
+                limit=100,
+                offset=offset,
+                additional_types=["track"],
+            )
+            items = results["items"]
+            if not items:
                 break
 
-            tracks.extend(t["track"] for t in results["items"] if t["track"])
+            tracks.extend(item["track"] for item in items if item.get("track"))
             offset += 100
+    # Album
+    elif source_type == "album":
+        album_name = source["name"]
+        while True:
+            results = sp_user.album_tracks(
+                source["id"],
+                limit=50,
+                offset=offset,
+            )
+            items = results["items"]
+            if not items:
+                break
+
+            for track in items:
+                track["album"] = {"name": album_name}
+                tracks.append(track)
+            offset += 50
+
+    else:
+        raise ValueError(f"Unsupported source type!")
 
     return tracks
 
 
 def copy_songs(sp_user, source_tracks, dest_name):
-    all_playlists = list_playlists(sp_user)
-    dest = next((p for p in all_playlists if p["name"].lower() == dest_name.lower()), None)
-    if not dest:
-        print("Destination playlist not found!")
+    try:
+        dest_playlist = next((p for p in list_playlists(sp_user) if p["name"].lower() == dest_name.lower()), None)
+    except Exception as e:
+        print(f"Error finding destination playlist: {e}")
+        return
+    
+    try:
+        existing_uris = {t["uri"] for t in get_source_tracks(sp_user, dest_playlist, source_type="playlist") if t.get("uri")}
+    except Exception as e:
+        print(f"Error fetching destination playlist tracks: {e}")
         return
 
-    # Fetch destination playlist tracks
-    dest_tracks = get_playlist_tracks(sp_user, dest)
-    existing_uris = {track["uri"] for track in dest_tracks}
-    source_uris = [track["uri"] for track in source_tracks if track.get("uri")]
-
-    # Remove duplicates
-    unique_source_uris = list(dict.fromkeys(source_uris))
-    new_uris = [uri for uri in unique_source_uris if uri not in existing_uris]
+    dedupe = set()
+    new_uris = [
+        t["uri"]
+        for t in source_tracks
+        if t.get("uri")
+        and t["uri"] not in existing_uris
+        and not (t["uri"] in dedupe or dedupe.add(t["uri"]))
+    ]
     if not new_uris:
         print("No new songs to add — all tracks already exist!")
         return
 
     for i in range(0, len(new_uris), 100):
-        sp_user.playlist_add_items(dest["id"], new_uris[i : i + 100])
+        sp_user.playlist_add_items(dest_playlist["id"], new_uris[i : i + 100])
 
     print(f"Added {len(new_uris)} songs to '{dest_name}'")
 
 
-def delete_playlist(sp_user, playlist):
-    sp_user.current_user_unfollow_playlist(playlist["id"])
-    print(f"Removed playlist '{playlist['name']}' from your library")
+def remove_source(sp_user, source, source_type):
+    if source_type == "playlist":
+        sp_user.current_user_unfollow_playlist(source["id"])
+        print(f"Removed playlist '{source['name']}' from your library?")
+
+    else:
+        sp_user.current_user_saved_albums_delete([source["id"]])
+        print(f"Removed album '{source['name']}' from your library?")
 
 
 def delete_songs_range(sp_user, source_playlist, source_tracks):
@@ -117,3 +171,14 @@ def create_new_playlist(sp_user, user_id):
     except Exception as e:
         print(f"Error creating playlist: {e}")
         return None
+
+
+def get_writable_playlists_names(sp_user, user_id):
+    try:
+        all_playlists = list_playlists(sp_user)
+    except Exception as e:
+        print(f"Error fetching playlists: {e}")
+        return []
+
+    writable_playlists = [p for p in all_playlists if p.get("owner", {}).get("id") == user_id]
+    return [p["name"] for p in writable_playlists] + ["Create new playlist", "Cancel"]

@@ -1,63 +1,78 @@
+import time
 from prompt_toolkit import prompt
+from spotmate.spotify_auth import create_spotify_client
 from spotmate.manager import (
-    copy_all,
-    copy_range,
-    export_playlist,
-    remove_range,
-    remove_playlist,
+    import_playlist,
+    manage_source,
 )
 from spotmate.ui import (
     select_from_list,
 )
-from spotmate.spotify_auth import create_spotify_client
 from spotmate.playlist_utils import (
+    create_new_playlist,
+    list_albums,
     list_playlists,
-    get_playlist_tracks,
 )
 from spotmate.actions import (
     check_for_update,
-    get_playlist_type,
-    get_actions_for_type,
+    clear_screen,
+    select_source_type,
 )
 
 
-def manage_playlist(sp_user, user_id, source_playlist):
-    print("\nFetching playlist tracks...")
-    source_tracks = get_playlist_tracks(sp_user, source_playlist)
-    playlist_type = get_playlist_type(source_playlist, user_id)
-
+def manage_album(sp_user, user_id):
     while True:
-        all_playlists = list_playlists(sp_user)
-        writable_playlists = [p for p in all_playlists if p.get("owner", {}).get("id") == user_id]
-        writable_names = [p["name"] for p in writable_playlists] + ["Create new playlist", "Cancel"]
-
-        action_choice = select_from_list(
-            title=f"\nSelected playlist: {source_playlist['name']} ({playlist_type.upper()})",
-            text="Choose an action:",
-            options=get_actions_for_type(playlist_type),
-        )
-        if action_choice in (None, "Back"):
+        try:
+            albums = list_albums(sp_user)
+        except Exception as e:
+            print(f"Error fetching albums: {e}")
             return
-        # COPY ALL
-        elif action_choice == "Copy all songs":
-            copy_all(writable_names, sp_user, user_id, source_tracks)
-        # COPY RANGE
-        elif action_choice == "Copy a range of songs":
-            copy_range(writable_names, sp_user, user_id, source_tracks)
-        # EXPORT
-        elif action_choice == "Export to JSON/CSV":
-            export_playlist(source_playlist, source_tracks, output_dir=".")
-        # DELETE / UNFOLLOW
-        elif action_choice in ("Delete playlist", "Unfollow playlist"):
-            if remove_playlist(sp_user, source_playlist):
-                return
-        # DELETE RANGE
-        elif action_choice == "Delete a range of songs":
-            remove_range(sp_user, source_playlist, source_tracks)
+
+        options = ["Back"] + [a["name"] for a in albums]
+        choice = select_from_list(
+            title="Your Albums",
+            text="Choose an album:",
+            options=options,
+        )
+        clear_screen()
+        if choice in (None, "Back"):
+            return
+
+        album = next(a for a in albums if a["name"] == choice)
+        manage_source(sp_user, user_id, album, source_type="album")
+        clear_screen()
+
+
+def manage_playlist(sp_user, user_id):
+    while True:
+        try:
+            playlists = list_playlists(sp_user)
+        except Exception as e:
+            print(f"Error fetching playlists: {e}")
+            return
+
+        options = ["Back", "Create new playlist", "Import from JSON/CSV"] + [p["name"] for p in playlists]
+        choice = select_from_list(
+            title="Your Playlists",
+            text="Choose a playlist:",
+            options=options,
+        )
+        clear_screen()
+        if choice in (None, "Back"):
+            return
+        elif choice == "Create new playlist":
+            create_new_playlist(sp_user, user_id)
+        elif choice == "Import from JSON/CSV":
+            import_playlist(sp_user, user_id)
+        else:
+            playlist = next(p for p in playlists if p["name"] == choice)
+            manage_source(sp_user, user_id, playlist, source_type="playlist")
+        time.sleep(1)
+        clear_screen()
 
 
 def main():
-    print("SpotMate — Spotify Playlist Manager\n")
+    print("SpotMate — Spotify Manager\n")
     print("Documentation & Source Code: https://github.com/riAssinstAr/Spot-Mate\n")
     check_for_update()
 
@@ -68,25 +83,25 @@ def main():
         return
 
     print("Authenticating with Spotify...")
-    sp_user = create_spotify_client(client_id, client_secret)
-    user_id = sp_user.current_user()["id"]
+    try:
+        sp_user = create_spotify_client(client_id, client_secret)
+        user_id = sp_user.current_user()["id"]
+    except Exception as e:
+        print(f"Authentication failed: {e}")
+        print("Please check your Client ID and Secret and try again.")
+        return
 
+    clear_screen()
     while True:
-        print("Fetching your playlists...")
-        all_playlists = list_playlists(sp_user)
-        playlist_names = [p["name"] for p in all_playlists] + ["Exit"]
-
-        choice = select_from_list(
-            title="\nYour playlists",
-            text="Choose a playlist to manage:",
-            options=playlist_names,
-        )
-        if choice in (None, "Exit"):
-            print("\nGoodbye!")
+        source_type = select_source_type()
+        clear_screen()
+        if source_type in (None, "Exit"):
             break
 
-        playlist_choice = next(p for p in all_playlists if p["name"] == choice)
-        manage_playlist(sp_user, user_id, playlist_choice)
+        if source_type == "Playlists":
+            manage_playlist(sp_user, user_id)
+        elif source_type == "Albums":
+            manage_album(sp_user, user_id)
 
 
 if __name__ == "__main__": main()
