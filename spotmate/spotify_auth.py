@@ -15,7 +15,7 @@ def create_spotify_client(client_id, client_secret):
     oauth = SpotifyOAuth(
         client_id=client_id,
         client_secret=client_secret,
-        redirect_uri="http://localhost:8888/callback",
+        redirect_uri="http://127.0.0.1:8888/callback",
         scope=SCOPES,
         open_browser=True,
         cache_path=".spotmate_cache",
