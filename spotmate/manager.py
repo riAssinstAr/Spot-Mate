@@ -7,6 +7,7 @@ from spotmate.actions import (
     get_destination,
     get_file_tracks,
     get_source_meta,
+    safe_filename,
     serialize_tracks,
 )
 from spotmate.playlist_utils import (
@@ -87,7 +88,7 @@ def export_playlist(source_playlist, source_tracks, output_dir="."):
         return
 
     tracks = [serialize_tracks(t) for t in source_tracks]
-    filename = source_playlist["name"].replace("/", "_").replace("\\", "_")
+    filename = safe_filename(source_playlist["name"])
     path = Path(output_dir) / f"{filename}.{file_format}"
     try:
         export_tracks(tracks, path, file_format)

@@ -1,6 +1,7 @@
 import csv
 import json
 import os
+import re
 import requests
 from packaging import version
 from spotmate.playlist_utils import create_new_playlist, get_writable_playlists_names
@@ -151,3 +152,13 @@ def get_file_tracks(file_path):
     else:
         print("Unsupported file format! Use JSON or CSV.")
         return None
+
+
+def safe_filename(name):
+    name = re.sub(r'[<>:"|?*(){},]', '', name)
+    words = name.replace("/", "_").replace("\\", "_").split()
+
+    if len(words) > 4:
+        words = words[:2] + words[-2:]
+
+    return "_".join(words)
