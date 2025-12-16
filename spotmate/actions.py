@@ -8,7 +8,7 @@ from spotmate.playlist_utils import create_new_playlist, get_writable_playlists_
 from spotmate.ui import select_from_list
 
 
-CURRENT_VERSION = "2.0.0"
+CURRENT_VERSION = "2.0.2"
 PACKAGE_NAME = "spotmate"
 
 
