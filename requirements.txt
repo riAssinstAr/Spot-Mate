@@ -2,3 +2,4 @@ spotipy>=2.23.0
 pytest>=6.2.5
 setuptools>=57.0.0
 prompt-toolkit>=3.0
+packaging>=23.0
