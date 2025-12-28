@@ -7,6 +7,15 @@
 </p>
 <br>
 
+<p align="center">
+  <a href="https://pepy.tech/projects/spotmate">
+    <img src="https://static.pepy.tech/personalized-badge/spotmate?period=total&units=INTERNATIONAL_SYSTEM&left_color=GREY&right_color=GREEN&left_text=downloads" />
+  </a>
+  <a href="https://pypi.org/project/spotmate/">
+    <img src="https://img.shields.io/pypi/v/spotmate.svg" />
+  </a>
+</p>
+
 # IMPORTANT - Before you use the package, you'll need to do the following:
 
 - Login to Spotify Developers [Website](https://developer.spotify.com/) with your spotify account. Go to user dashboard and create an new app.
